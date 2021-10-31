@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SearchGoogleBooks</string>
+    <string name="hint_search">検索ワードを入力して下さい</string>
+    <string name="search">検索</string>
 </resources>
