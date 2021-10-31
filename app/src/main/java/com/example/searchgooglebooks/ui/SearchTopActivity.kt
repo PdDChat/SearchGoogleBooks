@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +15,7 @@ import com.example.searchgooglebooks.R
 import com.example.searchgooglebooks.data.model.Items
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.getSystemService
+import com.example.searchgooglebooks.ui.SearchBookViewModel.ApiState.*
 
 
 class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListener {
@@ -23,6 +25,7 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
 
     private var inputMethodManager: InputMethodManager? = null
     private var searchTopMainLayout: ConstraintLayout? = null
+    private var progressBar: ProgressBar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,11 +33,7 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
 
         setupView()
 
-        viewModel = SearchBookViewModel()
-        viewModel.bookList.observe(this, {
-            adapter.appendBookList(it)
-            adapter.notifyDataSetChanged()
-        })
+        setUpObserve()
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -54,6 +53,8 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
     }
 
     private fun setupView() {
+        progressBar = findViewById(R.id.search_book_progress)
+
         searchTopMainLayout = findViewById(R.id.search_top_main)
         inputMethodManager = getSystemService()
 
@@ -68,5 +69,20 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
         val dividerItemDecoration = DividerItemDecoration(this, LinearLayoutManager(this).orientation)
         recyclerView.addItemDecoration(dividerItemDecoration)
         recyclerView.adapter = adapter
+    }
+
+    private fun setUpObserve() {
+        viewModel = SearchBookViewModel()
+        viewModel.bookList.observe(this, {
+            adapter.appendBookList(it)
+            adapter.notifyDataSetChanged()
+        })
+
+        viewModel.apiState.observe(this, { state ->
+            when (state) {
+                LOADING -> progressBar?.visibility = ProgressBar.VISIBLE
+                else -> progressBar?.visibility = ProgressBar.GONE
+            }
+        })
     }
 }
