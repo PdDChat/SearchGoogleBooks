@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.searchgooglebooks.R
 import com.example.searchgooglebooks.data.model.GoogleBook
@@ -45,6 +47,8 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
 
         adapter = BookListAdapter(this)
         val recyclerView: RecyclerView = findViewById(R.id.book_list_recycler_view)
+        val dividerItemDecoration = DividerItemDecoration(this, LinearLayoutManager(this).orientation)
+        recyclerView.addItemDecoration(dividerItemDecoration)
         recyclerView.adapter = adapter
     }
 }
