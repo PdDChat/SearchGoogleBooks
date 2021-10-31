@@ -9,5 +9,6 @@ data class Items(
 )
 
 data class VolumeInfo(
-    val title: String
+    val title: String,
+    val description: String? = null
 )

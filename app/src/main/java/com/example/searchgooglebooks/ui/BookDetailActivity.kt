@@ -11,7 +11,9 @@ class BookDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_book_detail)
 
         val bookTitle = intent.getStringExtra("book_title")
-        val bookText: TextView = findViewById(R.id.detail_book_title)
-        bookText.text = bookTitle
+        val bookDescription = intent.getStringExtra("book_description")
+
+        findViewById<TextView>(R.id.detail_book_title).text = bookTitle
+        findViewById<TextView>(R.id.detail_book_description).text = bookDescription
     }
 }

@@ -32,7 +32,6 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
         recyclerView.adapter = adapter
 
         viewModel.bookList.observe(this, {
-            Log.d("DEBUG_LOG", it[0].volumeInfo.title)
             adapter.appendBookList(it)
             adapter.notifyDataSetChanged()
         })
@@ -41,6 +40,7 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
     override fun onItemClick(items: Items) {
         val intent = Intent(this, BookDetailActivity::class.java)
         intent.putExtra("book_title", items.volumeInfo.title)
+        intent.putExtra("book_description", items.volumeInfo.description)
         startActivity(intent)
     }
 }
