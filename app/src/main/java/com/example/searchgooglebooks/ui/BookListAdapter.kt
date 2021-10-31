@@ -8,7 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.searchgooglebooks.R
 import com.example.searchgooglebooks.data.model.Items
 
-class BookListAdapter: RecyclerView.Adapter<BookListAdapter.BookListViewHolder>() {
+class BookListAdapter(private val listener: OnItemClickListener): RecyclerView.Adapter<BookListAdapter.BookListViewHolder>() {
+
+    interface OnItemClickListener {
+        fun onItemClick(items: Items)
+    }
 
     private val items: MutableList<Items> = mutableListOf()
 
@@ -23,6 +27,9 @@ class BookListAdapter: RecyclerView.Adapter<BookListAdapter.BookListViewHolder>(
 
     override fun onBindViewHolder(holder: BookListViewHolder, position: Int) {
         holder.title.text = items[position].volumeInfo.title
+        holder.title.setOnClickListener {
+            listener.onItemClick(items[position])
+        }
     }
 
     override fun getItemCount() = items.size

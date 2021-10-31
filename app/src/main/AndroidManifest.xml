@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SearchGoogleBooks">
         <activity
+            android:name=".ui.BookDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.SearchTopActivity"
             android:exported="true">
             <intent-filter>
