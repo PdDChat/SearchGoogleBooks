@@ -8,7 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
-class SearchGoogleBookProvider {
+class SearchBookProvider {
 
     private val baseUrl: String = "https://www.googleapis.com"
 

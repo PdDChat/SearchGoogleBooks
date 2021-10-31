@@ -14,23 +14,15 @@ import com.example.searchgooglebooks.data.model.Items
 class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListener {
 
     private lateinit var viewModel: SearchBookViewModel
+    private lateinit var adapter: BookListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_top)
 
+        setupView()
+
         viewModel = SearchBookViewModel()
-
-        val inputText: EditText = findViewById(R.id.input_text)
-        findViewById<Button>(R.id.search_button).setOnClickListener {
-            val query = inputText.text.toString()
-            viewModel.searchGoogleBooks(query)
-        }
-
-        val adapter = BookListAdapter(this)
-        val recyclerView: RecyclerView = findViewById(R.id.book_list_recycler_view)
-        recyclerView.adapter = adapter
-
         viewModel.bookList.observe(this, {
             adapter.appendBookList(it)
             adapter.notifyDataSetChanged()
@@ -42,5 +34,17 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
         intent.putExtra("book_title", items.volumeInfo.title)
         intent.putExtra("book_description", items.volumeInfo.description)
         startActivity(intent)
+    }
+
+    private fun setupView() {
+        val inputText: EditText = findViewById(R.id.input_text)
+        findViewById<Button>(R.id.search_button).setOnClickListener {
+            val query = inputText.text.toString()
+            viewModel.searchGoogleBooks(query)
+        }
+
+        adapter = BookListAdapter(this)
+        val recyclerView: RecyclerView = findViewById(R.id.book_list_recycler_view)
+        recyclerView.adapter = adapter
     }
 }

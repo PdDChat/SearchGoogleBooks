@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.searchgooglebooks.data.model.Items
-import com.example.searchgooglebooks.data.repository.SearchGoogleBookRepository
+import com.example.searchgooglebooks.data.repository.SearchBookRepository
 import kotlinx.coroutines.launch
 
 class SearchBookViewModel: ViewModel() {
@@ -13,7 +13,7 @@ class SearchBookViewModel: ViewModel() {
     private var _bookList: MutableLiveData<List<Items>> = MutableLiveData()
     val bookList: LiveData<List<Items>> = _bookList
 
-    private val repository: SearchGoogleBookRepository = SearchGoogleBookRepository()
+    private val repository: SearchBookRepository = SearchBookRepository()
 
     fun searchGoogleBooks(query: String) {
         viewModelScope.launch {
