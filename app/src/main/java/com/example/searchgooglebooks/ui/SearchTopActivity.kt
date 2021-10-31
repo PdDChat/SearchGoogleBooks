@@ -1,35 +1,32 @@
 package com.example.searchgooglebooks.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
 import android.widget.ProgressBar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.getSystemService
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.searchgooglebooks.R
 import com.example.searchgooglebooks.data.model.Items
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.getSystemService
-import com.example.searchgooglebooks.ui.SearchBookViewModel.ApiState.*
+import com.example.searchgooglebooks.databinding.ActivitySearchTopBinding
+import com.example.searchgooglebooks.ui.SearchBookViewModel.ApiState.LOADING
 
 
 class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListener {
+
+    private lateinit var binding: ActivitySearchTopBinding
 
     private lateinit var viewModel: SearchBookViewModel
     private lateinit var adapter: BookListAdapter
 
     private var inputMethodManager: InputMethodManager? = null
-    private var searchTopMainLayout: ConstraintLayout? = null
-    private var progressBar: ProgressBar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search_top)
+        binding = ActivitySearchTopBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setupView()
 
@@ -37,10 +34,9 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        //キーボードを隠す
-        inputMethodManager?.hideSoftInputFromWindow(searchTopMainLayout?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-        //背景にフォーカスを移す
-        searchTopMainLayout?.requestFocus()
+        // 背景がタップされたらキーボードを隠す
+        inputMethodManager?.hideSoftInputFromWindow(binding.searchTopMain.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        binding.searchTopMain.requestFocus()
 
         return super.dispatchTouchEvent(ev)
     }
@@ -53,19 +49,15 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
     }
 
     private fun setupView() {
-        progressBar = findViewById(R.id.search_book_progress)
-
-        searchTopMainLayout = findViewById(R.id.search_top_main)
         inputMethodManager = getSystemService()
 
-        val inputText: EditText = findViewById(R.id.input_text)
-        findViewById<Button>(R.id.search_button).setOnClickListener {
-            val query = inputText.text.toString()
+        binding.searchButton.setOnClickListener {
+            val query = binding.inputText.text.toString()
             viewModel.searchGoogleBooks(query)
         }
 
         adapter = BookListAdapter(this)
-        val recyclerView: RecyclerView = findViewById(R.id.book_list_recycler_view)
+        val recyclerView = binding.bookListRecyclerView
         val dividerItemDecoration = DividerItemDecoration(this, LinearLayoutManager(this).orientation)
         recyclerView.addItemDecoration(dividerItemDecoration)
         recyclerView.adapter = adapter
@@ -80,8 +72,8 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
 
         viewModel.apiState.observe(this, { state ->
             when (state) {
-                LOADING -> progressBar?.visibility = ProgressBar.VISIBLE
-                else -> progressBar?.visibility = ProgressBar.GONE
+                LOADING -> binding.searchBookProgress.visibility = ProgressBar.VISIBLE
+                else -> binding.searchBookProgress.visibility = ProgressBar.GONE
             }
         })
     }
