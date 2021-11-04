@@ -1,12 +1,16 @@
 package com.example.searchgooglebooks.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.example.searchgooglebooks.data.model.GoogleBook
 import com.example.searchgooglebooks.data.model.Items
 import com.example.searchgooglebooks.data.repository.SearchBookRepository
-import kotlinx.coroutines.launch
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.SingleObserver
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class SearchBookViewModel: ViewModel() {
 
@@ -26,16 +30,23 @@ class SearchBookViewModel: ViewModel() {
     private val repository: SearchBookRepository = SearchBookRepository()
 
     fun searchGoogleBooks(query: String) {
-        viewModelScope.launch {
-            _apiState.postValue(ApiState.LOADING)
+        repository.getGoogleBooks(query)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : SingleObserver<GoogleBook> {
+                override fun onSubscribe(d: Disposable) {
+                    _apiState.postValue(ApiState.LOADING)
+                }
 
-            val response = repository.getGoogleBooks(query)
-            if (response.isSuccessful) {
-                _apiState.postValue(ApiState.SUCCESS)
-                _bookList.postValue(response.body()?.items)
-            } else {
-                _apiState.postValue(ApiState.ERROR)
-            }
-        }
+                override fun onSuccess(response: GoogleBook) {
+                    _apiState.postValue(ApiState.SUCCESS)
+                    _bookList.postValue(response.items)
+                }
+
+                override fun onError(e: Throwable) {
+                    _apiState.postValue(ApiState.ERROR)
+                    Log.d("DEBUG_LOG", e.message.toString())
+                }
+            })
     }
 }
