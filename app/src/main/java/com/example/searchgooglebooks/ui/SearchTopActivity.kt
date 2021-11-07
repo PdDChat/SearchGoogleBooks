@@ -5,13 +5,14 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.searchgooglebooks.data.model.Items
 import com.example.searchgooglebooks.databinding.ActivitySearchTopBinding
-import com.example.searchgooglebooks.ui.SearchBookViewModel.ApiState.LOADING
+import com.example.searchgooglebooks.ui.SearchBookViewModel.ApiState.*
 
 
 class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListener {
@@ -73,6 +74,10 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
         viewModel.apiState.observe(this, { state ->
             when (state) {
                 LOADING -> binding.searchBookProgress.visibility = ProgressBar.VISIBLE
+                ERROR ->  {
+                    binding.searchBookProgress.visibility = ProgressBar.GONE
+                    Toast.makeText(this, "何らかのエラーが発生しました", Toast.LENGTH_SHORT).show()
+                }
                 else -> binding.searchBookProgress.visibility = ProgressBar.GONE
             }
         })

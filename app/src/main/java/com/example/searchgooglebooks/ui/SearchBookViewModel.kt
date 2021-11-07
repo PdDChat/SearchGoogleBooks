@@ -29,13 +29,14 @@ class SearchBookViewModel: ViewModel() {
         viewModelScope.launch {
             _apiState.postValue(ApiState.LOADING)
 
-            val response = repository.getGoogleBooks(query)
-            if (response.isSuccessful) {
-                _apiState.postValue(ApiState.SUCCESS)
-                _bookList.postValue(response.body()?.items)
-            } else {
-                _apiState.postValue(ApiState.ERROR)
-            }
+            kotlin.runCatching { repository.getGoogleBooks(query) }
+                .onSuccess {
+                    _apiState.postValue(ApiState.SUCCESS)
+                    _bookList.postValue(it.body()?.items)
+                }
+                .onFailure {
+                    _apiState.postValue(ApiState.ERROR)
+                }
         }
     }
 }
