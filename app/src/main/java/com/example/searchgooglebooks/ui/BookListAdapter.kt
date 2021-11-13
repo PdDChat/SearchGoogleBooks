@@ -34,5 +34,5 @@ class BookListAdapter(private val listener: OnItemClickListener) : ListAdapter<I
 
 private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Items>() {
     override fun areContentsTheSame(oldItem: Items, newItem: Items) = oldItem == newItem
-    override fun areItemsTheSame(oldItem: Items, newItem: Items) = oldItem == newItem
+    override fun areItemsTheSame(oldItem: Items, newItem: Items) = oldItem.id == newItem.id
 }
