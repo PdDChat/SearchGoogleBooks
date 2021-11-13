@@ -1,4 +1,4 @@
-package com.example.searchgooglebooks.ui
+package com.example.searchgooglebooks.ui.viewmodel
 
 import androidx.lifecycle.*
 import com.example.searchgooglebooks.data.model.Items

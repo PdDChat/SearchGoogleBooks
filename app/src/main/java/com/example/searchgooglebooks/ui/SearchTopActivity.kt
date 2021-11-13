@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.searchgooglebooks.data.model.Items
 import com.example.searchgooglebooks.databinding.ActivitySearchTopBinding
-import com.example.searchgooglebooks.ui.SearchBookViewModel.ApiState.*
+import com.example.searchgooglebooks.ui.viewmodel.SearchBookViewModel
+import com.example.searchgooglebooks.ui.viewmodel.SearchBookViewModel.ApiState.*
+import com.example.searchgooglebooks.ui.viewmodel.SearchBookViewModelFactory
 import com.google.gson.Gson
 
 
