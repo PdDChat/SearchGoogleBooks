@@ -1,24 +1,18 @@
 package com.example.searchgooglebooks.data.repository
 
-import com.example.searchgooglebooks.data.model.GoogleBook
 import com.example.searchgooglebooks.api.SearchBookApi
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.example.searchgooglebooks.data.model.GoogleBook
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchBookRepository {
 
     private val baseUrl: String = "https://www.googleapis.com"
 
     suspend fun getGoogleBooks(query: String): Response<GoogleBook> {
-        val moshi: Moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-
         val client: OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
@@ -27,7 +21,7 @@ class SearchBookRepository {
 
         val retrofit: Retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
 
