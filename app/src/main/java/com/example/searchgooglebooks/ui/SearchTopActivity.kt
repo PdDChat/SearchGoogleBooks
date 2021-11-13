@@ -8,6 +8,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.searchgooglebooks.data.model.Items
@@ -20,7 +21,9 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
 
     private lateinit var binding: ActivitySearchTopBinding
 
-    private lateinit var viewModel: SearchBookViewModel
+    private val viewModel: SearchBookViewModel by lazy {
+        ViewModelProvider(this, SearchBookViewModelFactory())[SearchBookViewModel::class.java]
+    }
     private lateinit var adapter: BookListAdapter
 
     private var inputMethodManager: InputMethodManager? = null
@@ -65,7 +68,6 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
     }
 
     private fun setUpObserve() {
-        viewModel = SearchBookViewModel()
         viewModel.bookList.observe(this, {
             adapter.submitList(it)
         })

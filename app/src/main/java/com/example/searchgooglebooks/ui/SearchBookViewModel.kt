@@ -1,14 +1,11 @@
 package com.example.searchgooglebooks.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.searchgooglebooks.data.model.Items
 import com.example.searchgooglebooks.data.repository.SearchBookRepository
 import kotlinx.coroutines.launch
 
-class SearchBookViewModel: ViewModel() {
+class SearchBookViewModel(private val repository: SearchBookRepository): ViewModel() {
 
     enum class ApiState {
         NONE,
@@ -23,8 +20,6 @@ class SearchBookViewModel: ViewModel() {
     private var _apiState: MutableLiveData<ApiState> = MutableLiveData(ApiState.NONE)
     val apiState: LiveData<ApiState> = _apiState
 
-    private val repository: SearchBookRepository = SearchBookRepository()
-
     fun searchGoogleBooks(query: String) {
         viewModelScope.launch {
             _apiState.postValue(ApiState.LOADING)
@@ -38,5 +33,14 @@ class SearchBookViewModel: ViewModel() {
                     _apiState.postValue(ApiState.ERROR)
                 }
         }
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
+class SearchBookViewModelFactory(
+    private val repository: SearchBookRepository = SearchBookRepository()
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return SearchBookViewModel(repository) as T
     }
 }
