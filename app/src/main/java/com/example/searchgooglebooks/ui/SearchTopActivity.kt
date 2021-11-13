@@ -24,18 +24,20 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
     private val viewModel: SearchBookViewModel by lazy {
         ViewModelProvider(this, SearchBookViewModelFactory())[SearchBookViewModel::class.java]
     }
-    private lateinit var adapter: BookListAdapter
+
+    private lateinit var bookListAdapter: BookListAdapter
 
     private var inputMethodManager: InputMethodManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySearchTopBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = ActivitySearchTopBinding.inflate(layoutInflater).apply {
+            setContentView(root)
+        }
 
         setupView()
 
-        setUpObserve()
+        setupObserver()
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -47,8 +49,9 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
     }
 
     override fun onItemClick(items: Items) {
-        val intent = Intent(this, BookDetailActivity::class.java)
-        intent.putExtra("book_item", Gson().toJson(items))
+        val intent = Intent(this, BookDetailActivity::class.java).apply {
+            putExtra("book_item", Gson().toJson(items))
+        }
         startActivity(intent)
     }
 
@@ -60,16 +63,16 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
             viewModel.searchGoogleBooks(query)
         }
 
-        adapter = BookListAdapter(this)
-        val recyclerView = binding.bookListRecyclerView
-        val dividerItemDecoration = DividerItemDecoration(this, LinearLayoutManager(this).orientation)
-        recyclerView.addItemDecoration(dividerItemDecoration)
-        recyclerView.adapter = adapter
-    }
+        bookListAdapter = BookListAdapter(this)
+        binding.bookListRecyclerView.apply {
+            val context = this@SearchTopActivity
+            addItemDecoration(DividerItemDecoration(context, LinearLayoutManager(context).orientation))
+            adapter = bookListAdapter
+        } }
 
-    private fun setUpObserve() {
+    private fun setupObserver() {
         viewModel.bookList.observe(this, {
-            adapter.submitList(it)
+            bookListAdapter.submitList(it)
         })
 
         viewModel.apiState.observe(this, { state ->

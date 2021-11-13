@@ -13,9 +13,14 @@ class BookDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityBookDetailBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = ActivityBookDetailBinding.inflate(layoutInflater).apply {
+            setContentView(root)
+        }
 
+        setupView()
+    }
+
+    private fun setupView() {
         val bookItemJson = intent.getStringExtra("book_item")
         val item: Items = Gson().fromJson(bookItemJson, Items::class.java)
         binding.detailBookTitle.text = item.volumeInfo.title
