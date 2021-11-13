@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.searchgooglebooks.data.model.Items
 import com.example.searchgooglebooks.databinding.ActivitySearchTopBinding
 import com.example.searchgooglebooks.ui.SearchBookViewModel.ApiState.*
+import com.google.gson.Gson
 
 
 class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListener {
@@ -44,8 +45,7 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
 
     override fun onItemClick(items: Items) {
         val intent = Intent(this, BookDetailActivity::class.java)
-        intent.putExtra("book_title", items.volumeInfo.title)
-        intent.putExtra("book_description", items.volumeInfo.description)
+        intent.putExtra("book_item", Gson().toJson(items))
         startActivity(intent)
     }
 

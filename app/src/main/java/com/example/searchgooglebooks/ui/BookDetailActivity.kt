@@ -2,7 +2,9 @@ package com.example.searchgooglebooks.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.searchgooglebooks.data.model.Items
 import com.example.searchgooglebooks.databinding.ActivityBookDetailBinding
+import com.google.gson.Gson
 
 class BookDetailActivity : AppCompatActivity() {
 
@@ -14,10 +16,9 @@ class BookDetailActivity : AppCompatActivity() {
         binding = ActivityBookDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val bookTitle = intent.getStringExtra("book_title")
-        val bookDescription = intent.getStringExtra("book_description")
-
-        binding.detailBookTitle.text = bookTitle
-        binding.detailBookDescription.text = bookDescription
+        val bookItemJson = intent.getStringExtra("book_item")
+        val item: Items = Gson().fromJson(bookItemJson, Items::class.java)
+        binding.detailBookTitle.text = item.volumeInfo.title
+        binding.detailBookDescription.text = item.volumeInfo.description
     }
 }
