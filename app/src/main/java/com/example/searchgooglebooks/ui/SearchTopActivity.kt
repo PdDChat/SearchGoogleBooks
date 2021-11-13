@@ -67,8 +67,7 @@ class SearchTopActivity : AppCompatActivity(), BookListAdapter.OnItemClickListen
     private fun setUpObserve() {
         viewModel = SearchBookViewModel()
         viewModel.bookList.observe(this, {
-            adapter.appendBookList(it)
-            adapter.notifyDataSetChanged()
+            adapter.submitList(it)
         })
 
         viewModel.apiState.observe(this, { state ->

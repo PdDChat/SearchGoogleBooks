@@ -4,17 +4,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.searchgooglebooks.R
 import com.example.searchgooglebooks.data.model.Items
 
-class BookListAdapter(private val listener: OnItemClickListener): RecyclerView.Adapter<BookListAdapter.BookListViewHolder>() {
+class BookListAdapter(private val listener: OnItemClickListener): ListAdapter<Items, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     interface OnItemClickListener {
         fun onItemClick(items: Items)
     }
-
-    private val items: MutableList<Items> = mutableListOf()
 
     class BookListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title: TextView = view.findViewById(R.id.book_title)
@@ -25,17 +25,18 @@ class BookListAdapter(private val listener: OnItemClickListener): RecyclerView.A
         return BookListViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: BookListViewHolder, position: Int) {
-        holder.title.text = items[position].volumeInfo.title
-        holder.title.setOnClickListener {
-            listener.onItemClick(items[position])
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is BookListViewHolder) {
+            val item = getItem(position)
+            holder.title.text = item.volumeInfo.title
+            holder.title.setOnClickListener {
+                listener.onItemClick(item)
+            }
         }
     }
+}
 
-    override fun getItemCount() = items.size
-
-    fun appendBookList(bookList: List<Items>) {
-        items.clear()
-        items.addAll(bookList)
-    }
+private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Items>() {
+    override fun areContentsTheSame(oldItem: Items, newItem: Items) = oldItem == newItem
+    override fun areItemsTheSame(oldItem: Items, newItem: Items) = oldItem == newItem
 }
